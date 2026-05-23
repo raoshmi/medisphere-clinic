@@ -238,6 +238,11 @@ const adminEngine = {
     apt.status = newStatus;
     window.saveAppState();
     this.renderAppointmentsTable();
+
+    // Trigger floating SMS toast alert simulation
+    if (typeof window.showToastNotification === 'function') {
+      window.showToastNotification(`💬 SMS Sent: Hi ${apt.name}, your appointment on ${apt.date} (${apt.time}) is now ${newStatus.toUpperCase()}.`);
+    }
   },
 
   promptReschedule(aptId) {
@@ -254,8 +259,14 @@ const adminEngine = {
     }
 
     apt.date = newDate;
+    apt.status = 'confirmed'; // Auto confirm on admin reschedule
     window.saveAppState();
     this.renderAppointmentsTable();
+
+    // Trigger simulated SMS alert
+    if (typeof window.showToastNotification === 'function') {
+      window.showToastNotification(`💬 SMS Sent: Hi ${apt.name}, your appointment has been Rescheduled to ${newDate} (${apt.time}).`);
+    }
   },
 
   deleteApt(aptId) {
@@ -724,7 +735,84 @@ const adminEngine = {
   }
 };
 
-// --- SECURE AUTHENTICATION SYSTEM ---
+// Pure ES6 Cryptographic SHA-256 Engine
+function sha256(ascii) {
+  function rightRotate(value, amount) {
+    return (value >>> amount) | (value << (32 - amount));
+  }
+  
+  var mathPow = Math.pow;
+  var maxWord = mathPow(2, 32);
+  var lengthProperty = 'length';
+  var i, j;
+
+  var result = '';
+  var words = [];
+  var asciiLength = ascii[lengthProperty] * 8;
+  
+  var hash = sha256.h = sha256.h || [];
+  var k = sha256.k = sha256.k || [];
+  var primeCounter = k[lengthProperty];
+
+  var isComposite = {};
+  for (var candidate = 2; primeCounter < 64; candidate++) {
+    if (!isComposite[candidate]) {
+      for (i = 0; i < 313; i += candidate) {
+        isComposite[i] = candidate;
+      }
+      hash[primeCounter] = (mathPow(candidate, .5) * maxWord) | 0;
+      k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+    }
+  }
+  
+  ascii += '\x80';
+  while (ascii[lengthProperty] % 64 - 56) ascii += '\x00';
+  for (i = 0; i < ascii[lengthProperty]; i++) {
+    j = ascii.charCodeAt(i);
+    if (j >> 8) return;
+    words[i >> 2] |= j << (24 - (i % 4) * 8);
+  }
+  words[words[lengthProperty]] = ((asciiLength / maxWord) | 0);
+  words[words[lengthProperty]] = (asciiLength);
+  
+  for (j = 0; j < words[lengthProperty];) {
+    var w = words.slice(j, j += 16);
+    var oldHash = hash.slice(0);
+    
+    for (i = 0; i < 64; i++) {
+      var wItem = w[i];
+      if (i >= 16) {
+        var s0 = rightRotate(w[i - 15], 7) ^ rightRotate(w[i - 15], 18) ^ (w[i - 15] >>> 3);
+        var s1 = rightRotate(w[i - 2], 17) ^ rightRotate(w[i - 2], 19) ^ (w[i - 2] >>> 10);
+        wItem = w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+      }
+      
+      var temp1 = (hash[7] + (rightRotate(hash[4], 6) ^ rightRotate(hash[4], 11) ^ rightRotate(hash[4], 25)) + // S1
+        ((hash[4] & hash[5]) ^ (~hash[4] & hash[6])) + // ch
+        k[i] + wItem) | 0;
+      var temp2 = ((rightRotate(hash[0], 2) ^ rightRotate(hash[0], 13) ^ rightRotate(hash[0], 22)) + // S0
+        ((hash[0] & hash[1]) ^ (hash[0] & hash[2]) ^ (hash[1] & hash[2]))) | 0; // maj
+      
+      hash = [(temp1 + temp2) | 0].concat(hash);
+      hash[4] = (hash[4] + temp1) | 0;
+      hash.pop();
+    }
+    
+    for (i = 0; i < 8; i++) {
+      hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+  }
+  
+  for (i = 0; i < 8; i++) {
+    for (j = 3; j + 1; j--) {
+      var b = (hash[i] >> (j * 8)) & 255;
+      result += (b < 16 ? '0' : '') + b.toString(16);
+    }
+  }
+  return result;
+}
+
+// --- SECURE AUTHENTICATION SYSTEM (CRYPTOGRAPHICALLY HASHED GATES) ---
 function openAdminPortal() {
   // Clear modal backdrop and mobile menus first
   const backdrop = document.getElementById('bookingModal');
@@ -746,7 +834,8 @@ function authenticateAdmin() {
   const user = document.getElementById('a_username').value.trim();
   const pass = document.getElementById('a_password').value;
 
-  if (user === 'admin' && pass === 'admin123') {
+  // c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23e328029001e7cd3e is the SHA-256 hash of admin123
+  if (user === 'admin' && sha256(pass) === 'c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23e328029001e7cd3e') {
     // Authenticated! Close login card
     closeAdminLogin();
     

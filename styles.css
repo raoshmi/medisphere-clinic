@@ -1148,3 +1148,144 @@ body.theme-dark .settings-section-card h4 { border-bottom: 1.5px solid rgba(255,
   .cms-controls { flex-direction: column; align-items: stretch; }
   .cms-filters { flex-direction: column; }
 }
+
+/* ========================================= */
+/* PATIENT PORTAL & SMS NOTIFICATION STYLES  */
+/* ========================================= */
+
+/* SMS Floating Container & Alerts */
+#notificationContainer {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 4000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 340px;
+  width: calc(100vw - 48px);
+  pointer-events: none;
+}
+.toast-notification {
+  background: var(--warm-white);
+  border: 1px solid var(--slate-light);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(11,31,58,0.15);
+  pointer-events: auto;
+  animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+}
+body.theme-dark .toast-notification {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.toast-notification::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--teal);
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes toastOut {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(20px) scale(0.9); }
+}
+
+/* Patient Portal Timelines Workspace */
+.patient-timeline-card {
+  background: var(--warm-white);
+  border: 1px solid var(--slate-light);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+}
+body.theme-dark .patient-timeline-card {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.patient-timeline-card:hover {
+  box-shadow: var(--shadow-soft);
+  transform: translateY(-2px);
+}
+.patient-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.btn-portal-action {
+  background: var(--cream);
+  color: var(--text-mid);
+  border: 1px solid var(--slate-light);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'DM Sans', sans-serif;
+}
+body.theme-dark .btn-portal-action {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.btn-portal-action:hover {
+  background: var(--slate-light);
+  color: var(--navy);
+}
+.btn-portal-action.cancel {
+  border-color: rgba(220, 38, 38, 0.3);
+  background: rgba(254, 226, 226, 0.3);
+  color: #DC2626;
+}
+.btn-portal-action.cancel:hover {
+  background: #DC2626;
+  color: white;
+}
+.btn-portal-action.reschedule {
+  border-color: rgba(29, 158, 117, 0.3);
+  background: var(--teal-pale);
+  color: var(--teal);
+}
+.btn-portal-action.reschedule:hover {
+  background: var(--teal);
+  color: white;
+}
+.btn-portal-action.confirm {
+  background: var(--teal);
+  color: white;
+  border: none;
+}
+.btn-portal-action.confirm:hover {
+  background: var(--teal-light);
+}
+
+/* Reschedule subpanel dropdown */
+.reschedule-subpanel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--cream);
+  border-radius: var(--radius-sm);
+  padding: 0;
+  margin-top: 0;
+}
+.reschedule-subpanel.open {
+  max-height: 220px;
+  padding: 16px;
+  margin-top: 16px;
+  border: 1px solid var(--slate-light);
+  overflow: visible;
+}
+body.theme-dark .reschedule-subpanel.open {
+  border: 1px solid rgba(255,255,255,0.05);
+}
+

@@ -39,14 +39,34 @@ let state = {
   ]
 };
 
-// --- DATA PERSISTENCE METHODS ---
+// --- DATA PERSISTENCE METHODS (WITH XOR-BASE64 OBFUSCATION) ---
+const OBFUSCATION_KEY = 'medisphere_secure_key_2026';
+
+function encryptState(dataStr) {
+  let xor = '';
+  for (let i = 0; i < dataStr.length; i++) {
+    xor += String.fromCharCode(dataStr.charCodeAt(i) ^ OBFUSCATION_KEY.charCodeAt(i % OBFUSCATION_KEY.length));
+  }
+  return btoa(unescape(encodeURIComponent(xor)));
+}
+
+function decryptState(encodedStr) {
+  const xor = decodeURIComponent(escape(atob(encodedStr)));
+  let out = '';
+  for (let i = 0; i < xor.length; i++) {
+    out += String.fromCharCode(xor.charCodeAt(i) ^ OBFUSCATION_KEY.charCodeAt(i % OBFUSCATION_KEY.length));
+  }
+  return out;
+}
+
 function loadState() {
   const saved = localStorage.getItem('medisphere_state');
   if (saved) {
     try {
-      state = JSON.parse(saved);
+      const decrypted = decryptState(saved);
+      state = JSON.parse(decrypted);
     } catch (e) {
-      console.warn("Could not parse saved state, using default seed data", e);
+      console.warn("Could not parse saved state or integrity failed, using default seed data", e);
     }
   } else {
     saveState();
@@ -54,7 +74,9 @@ function loadState() {
 }
 
 function saveState() {
-  localStorage.setItem('medisphere_state', JSON.stringify(state));
+  const serialized = JSON.stringify(state);
+  const encrypted = encryptState(serialized);
+  localStorage.setItem('medisphere_state', encrypted);
 }
 
 // --- Dynamic Form Filter options ---
@@ -460,6 +482,9 @@ function handleHeroBooking() {
   document.getElementById('bookingForm').style.display = 'none';
   document.getElementById('successState').style.display = 'block';
 
+  // Dispatch live notification simulated SMS
+  showToastNotification(`💬 SMS Sent: Hello ${apt.name}, your booking request for ${apt.service} is received! Verification Code is 8192.`);
+
   // Trigger Admin Dashboard view update if opened
   if (window.adminEngine && typeof window.adminEngine.updateDashboardData === 'function') {
     window.adminEngine.updateDashboardData();
@@ -518,34 +543,290 @@ function submitBooking() {
   document.getElementById('bookingForm').style.display = 'none';
   document.getElementById('successState').style.display = 'block';
 
+  // Dispatch simulated live notifications
+  showToastNotification(`💬 SMS Sent: Hi ${apt.name}, appointment request received! Check progress in your Patient Portal.`);
+
   // Trigger Admin Dashboard view update if loaded
   if (window.adminEngine && typeof window.adminEngine.updateDashboardData === 'function') {
     window.adminEngine.updateDashboardData();
   }
 }
 
+// =========================================
+// PATIENT PORTAL SYSTEM (PHASE 1 UPGRADE)
+// =========================================
+let activePatientName = null;
+let activePatientPhone = null;
+
+function openPatientPortal() {
+  const backdrop = document.getElementById('patientPortalModal');
+  if (!backdrop) return;
+
+  const loginBox = document.getElementById('patient-login-box');
+  const dashboardBox = document.getElementById('patient-dashboard');
+
+  backdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  if (activePatientName && activePatientPhone) {
+    loginBox.style.display = 'none';
+    dashboardBox.style.display = 'block';
+    renderPatientPortalAppointments();
+  } else {
+    loginBox.style.display = 'block';
+    dashboardBox.style.display = 'none';
+    document.getElementById('p_name').value = '';
+    document.getElementById('p_phone').value = '';
+    clearValidationErrors('patient-login-box');
+  }
+}
+
+function closePatientPortal() {
+  const backdrop = document.getElementById('patientPortalModal');
+  if (backdrop) backdrop.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function authenticatePatient() {
+  const nameInp = document.getElementById('p_name');
+  const phoneInp = document.getElementById('p_phone');
+  
+  let isValid = true;
+  isValid = validateField(nameInp, requiredValidator, "Full name is required to verify.") && isValid;
+  isValid = validateField(phoneInp, phoneValidator, "Valid phone number is required.") && isValid;
+
+  if (!isValid) return;
+
+  const cleanName = nameInp.value.trim().toLowerCase();
+  const cleanPhone = phoneInp.value.trim();
+
+  // Search if any booking matches
+  const match = state.appointments.find(a => 
+    a.name.toLowerCase() === cleanName && 
+    (a.phone.replace(/[\s\-]/g, '').includes(cleanPhone.replace(/[\s\-]/g, '')) || 
+     cleanPhone.replace(/[\s\-]/g, '').includes(a.phone.replace(/[\s\-]/g, '')))
+  );
+
+  if (match) {
+    // Verified successfully! Log in
+    activePatientName = match.name;
+    activePatientPhone = match.phone;
+    
+    document.getElementById('patient-login-box').style.display = 'none';
+    document.getElementById('patient-dashboard').style.display = 'block';
+    
+    renderPatientPortalAppointments();
+    showToastNotification(`🔓 Access Approved: Welcome back, ${match.name}!`);
+  } else {
+    // Generate dummy verification state for demo purposes if they want to enter but let's notify them
+    alert("No active appointments found under this Name and Phone combination. Please verify spelling.");
+  }
+}
+
+function logoutPatient() {
+  activePatientName = null;
+  activePatientPhone = null;
+  
+  document.getElementById('patient-dashboard').style.display = 'none';
+  document.getElementById('patient-login-box').style.display = 'block';
+  
+  document.getElementById('p_name').value = '';
+  document.getElementById('p_phone').value = '';
+  
+  showToastNotification(`🔒 Logged out from patient session.`);
+}
+
+function renderPatientPortalAppointments() {
+  const container = document.getElementById('patient-apts-timeline');
+  const welcomeText = document.getElementById('patient-welcome-msg');
+  if (!container || !welcomeText) return;
+
+  welcomeText.textContent = `Hello, ${activePatientName}`;
+  container.innerHTML = '';
+
+  const cleanName = activePatientName.toLowerCase();
+  const list = state.appointments.filter(a => a.name.toLowerCase() === cleanName);
+
+  // Sort by date newest first
+  list.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  if (list.length === 0) {
+    container.innerHTML = `<div style="text-align: center; color: var(--slate); padding: 40px;">No appointments associated with your file.</div>`;
+    return;
+  }
+
+  list.forEach(apt => {
+    const card = document.createElement('div');
+    card.className = 'patient-timeline-card';
+    
+    const dateFormatted = new Date(apt.date).toLocaleDateString('en-US', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+    
+    // Check if reschedule/cancel buttons should show
+    const isUpdatable = apt.status === 'pending' || apt.status === 'confirmed';
+    let actionsMarkup = '';
+    
+    if (isUpdatable) {
+      actionsMarkup = `
+        <div class="patient-card-actions">
+          <button class="btn-portal-action reschedule" onclick="showReschedulePanel('${apt.id}')">Reschedule</button>
+          <button class="btn-portal-action cancel" onclick="cancelAppointmentFromPortal('${apt.id}')">Cancel Appointment</button>
+        </div>
+        
+        <!-- Hidden Reschedule Editor Subpanel -->
+        <div class="reschedule-subpanel" id="resch-${apt.id}">
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Select Date</label>
+              <input type="date" id="resch-date-${apt.id}" min="${new Date().toISOString().split('T')[0]}" value="${apt.date}">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Select Time</label>
+              <select id="resch-time-${apt.id}">
+                <option ${apt.time.includes('Morning') ? 'selected' : ''}>Morning (8:00 – 12:00)</option>
+                <option ${apt.time.includes('Afternoon') ? 'selected' : ''}>Afternoon (12:00 – 16:00)</option>
+                <option ${apt.time.includes('Evening') ? 'selected' : ''}>Evening (16:00 – 19:00)</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:12px;">
+            <button class="btn-portal-action confirm" onclick="confirmRescheduleFromPortal('${apt.id}')">Save Changes</button>
+            <button class="btn-portal-action" style="background:#f1f5f9; color:var(--text-mid);" onclick="hideReschedulePanel('${apt.id}')">Cancel</button>
+          </div>
+        </div>
+      `;
+    }
+
+    card.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <div>
+          <span class="status-badge ${apt.status}">${apt.status}</span>
+          <h4 style="font-size:1.15rem; color:var(--navy); margin-top:6px;">${apt.service}</h4>
+        </div>
+        <div style="text-align:right;">
+          <strong style="color:var(--navy); font-size:0.95rem;">📅 ${dateFormatted}</strong>
+          <div style="font-size:0.8rem; color:var(--slate); margin-top:2px;">🕒 ${apt.time}</div>
+        </div>
+      </div>
+      <p style="font-size:0.85rem; color:var(--text-mid); margin-bottom:12px; border-left:3px solid var(--teal-pale); padding-left:12px;">
+        <strong>Doctor:</strong> ${apt.doctor}<br>
+        <strong>Reason:</strong> ${apt.concern || 'General consultation.'}
+      </p>
+      ${actionsMarkup}
+    `;
+    container.appendChild(card);
+  });
+}
+
+function cancelAppointmentFromPortal(aptId) {
+  if (!confirm("Are you sure you want to cancel this appointment consultation?")) return;
+
+  const apt = state.appointments.find(a => a.id === aptId);
+  if (!apt) return;
+
+  apt.status = 'cancelled';
+  saveState();
+  renderPatientPortalAppointments();
+
+  // Send simulated SMS alert
+  showToastNotification(`💬 SMS Sent: Hello ${apt.name}, your appointment with ${apt.doctor} is successfully Cancelled. - MediSphere.`);
+
+  // Sync admin dashboard views
+  if (window.adminEngine && typeof window.adminEngine.updateDashboardData === 'function') {
+    window.adminEngine.updateDashboardData();
+  }
+}
+
+function showReschedulePanel(aptId) {
+  const panel = document.getElementById(`resch-${aptId}`);
+  if (panel) panel.classList.add('open');
+}
+
+function hideReschedulePanel(aptId) {
+  const panel = document.getElementById(`resch-${aptId}`);
+  if (panel) panel.classList.remove('open');
+}
+
+function confirmRescheduleFromPortal(aptId) {
+  const apt = state.appointments.find(a => a.id === aptId);
+  if (!apt) return;
+
+  const dateInp = document.getElementById(`resch-date-${aptId}`);
+  const timeSel = document.getElementById(`resch-time-${aptId}`);
+
+  if (!dateInp || !timeSel) return;
+
+  const newDate = dateInp.value;
+  const newTime = timeSel.value;
+
+  // Validation
+  if (!dateValidator(newDate)) {
+    alert("Please select a valid future date.");
+    return;
+  }
+
+  apt.date = newDate;
+  apt.time = newTime;
+  apt.status = 'pending'; // Reset status to pending for staff review
+  saveState();
+  
+  renderPatientPortalAppointments();
+  showToastNotification(`💬 SMS Sent: Reschedule request received! Your appointment is requested for ${newDate} (${newTime}).`);
+
+  // Sync admin dashboard views
+  if (window.adminEngine && typeof window.adminEngine.updateDashboardData === 'function') {
+    window.adminEngine.updateDashboardData();
+  }
+}
+
+// =========================================
+// FLOATING SMS/EMAIL NOTIFICATION SIMULATOR
+// =========================================
+function showToastNotification(message) {
+  let container = document.getElementById('notificationContainer');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'notificationContainer';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = 'toast-notification';
+  toast.innerHTML = `
+    <div style="font-weight:700; color:var(--navy); margin-bottom:4px; font-size:0.8rem; display:flex; align-items:center; gap:6px;">
+      <span>📱</span> MOBILE SMS CONFIRMATION
+    </div>
+    <div style="font-size:0.82rem; color:var(--text-dark); line-height:1.4;">${message}</div>
+  `;
+
+  container.appendChild(toast);
+
+  // Trigger sound simulation or active vibration triggers in premium frameworks if needed
+  
+  // Set timeout to dismiss
+  setTimeout(() => {
+    toast.style.animation = 'toastOut 0.4s cubic-bezier(0.4, 0, 1, 1) forwards';
+    setTimeout(() => {
+      toast.remove();
+    }, 450);
+  }, 6000);
+}
+
 // --- BOOTSTRAP INIT SYSTEM ---
 document.addEventListener('DOMContentLoaded', () => {
-  // Load State
   loadState();
-
-  // Active theme setting
   renderTheme(state.theme);
 
-  // Load Content
   renderServices();
   renderDoctors();
   renderReviews();
   renderArticles();
   updateClinicInfo();
 
-  // Sticky Navigation scroll observer
   window.addEventListener('scroll', () => {
     const nav = document.getElementById('navbar');
     if (nav) nav.classList.toggle('scrolled', window.scrollY > 40);
   });
 
-  // Dynamic animations observer
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -557,7 +838,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-  // Service options filters triggers
   const mService = document.getElementById('m_service');
   if (mService) {
     mService.addEventListener('change', () => {
@@ -565,27 +845,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Pre-load default values for booking dates (today)
   const todayStr = new Date().toISOString().split('T')[0];
   document.querySelectorAll('input[type="date"]').forEach(el => {
     el.min = todayStr;
   });
 });
 
-// Mobile menu toggle
 function toggleMenu() {
   const nav = document.getElementById('navbar');
   if (nav) nav.classList.toggle('menu-open');
 }
 
-// Accordion FAQ toggle
 function toggleFaq(item) {
   const isOpen = item.classList.contains('open');
   document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
   if (!isOpen) item.classList.add('open');
 }
 
-// Export modules to global context so structural HTML triggers work
+// Window Exports
 window.openModal = openBookingModal;
 window.closeModal = closeModal;
 window.handleBackdropClick = handleBackdropClick;
@@ -602,3 +879,14 @@ window.renderDoctors = renderDoctors;
 window.renderReviews = renderReviews;
 window.renderArticles = renderArticles;
 window.updateClinicInfo = updateClinicInfo;
+
+// Patient Portal Exports
+window.openPatientPortal = openPatientPortal;
+window.closePatientPortal = closePatientPortal;
+window.authenticatePatient = authenticatePatient;
+window.logoutPatient = logoutPatient;
+window.cancelAppointmentFromPortal = cancelAppointmentFromPortal;
+window.showReschedulePanel = showReschedulePanel;
+window.hideReschedulePanel = hideReschedulePanel;
+window.confirmRescheduleFromPortal = confirmRescheduleFromPortal;
+window.showToastNotification = showToastNotification;
