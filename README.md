@@ -1,13 +1,13 @@
 # 🏥 MediSphere Clinic — Premium Healthcare Portal & CMS
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/e8c8959d-6490-482a-a92c-806734185794/deploy-status)](https://medisphere-clinic.netlify.app)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/e8c8959d-6490-482a-a92c-806734185794/deploy-status)](https://moonlit-tulumba-2f93a7.netlify.app/)
 [![Tech Stack](https://img.shields.io/badge/Stack-HTML5%20%7C%20CSS3%20%7C%20JavaScript-blue)](https://github.com/raoshmi/medisphere-clinic)
 [![PWA](https://img.shields.io/badge/PWA-Installable%20%7C%20Offline-teal)](https://github.com/raoshmi/medisphere-clinic)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 MediSphere Clinic is a premium, high-fidelity Single Page Web Application (SPA) designed as a recruiter-tier internship portfolio. Built using pure Vanilla Javascript, CSS3, and HTML5, it delivers a comprehensive, state-of-the-art Patient Hub Portal and a full-featured administrative Staff console with a CMS editor and dynamic analytics dashboard.
 
-🔗 **Live Netlify Demo**: [https://medisphere-clinic.netlify.app](https://medisphere-clinic.netlify.app)  
+🔗 **Live Netlify Demo**: [https://moonlit-tulumba-2f93a7.netlify.app/](https://moonlit-tulumba-2f93a7.netlify.app/)  
 🔗 **GitHub Repository**: [https://github.com/raoshmi/medisphere-clinic](https://github.com/raoshmi/medisphere-clinic)
 
 ---
