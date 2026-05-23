@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediSphere Clinic — Compassionate Care, Expert Results</title>
+  <meta name="description" content="MediSphere Clinic offers world-class healthcare with board-certified physicians. Book your appointment today.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- NAVIGATION BAR -->
+  <nav id="navbar">
+    <div class="nav-logo" onclick="window.location.reload();">
+      <div class="logo-mark">
+        <svg viewBox="0 0 20 20"><path d="M10 2v16M2 10h16"/></svg>
+      </div>
+      <span class="logo-text">Medi<span>Sphere</span></span>
+    </div>
+    
+    <div class="nav-links-container">
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#doctors">Our Doctors</a></li>
+        <li><a href="#articles">Health Articles</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      
+      <!-- Theme Selection Dropdown Preset -->
+      <div class="theme-dropdown-container">
+        <select class="theme-select" aria-label="Theme selector" onchange="renderTheme(this.value)">
+          <option value="navy">Classic Navy</option>
+          <option value="emerald">Emerald Oasis</option>
+          <option value="amethyst">Royal Amethyst</option>
+          <option value="coral">Sunset Coral</option>
+          <option value="dark">Charcoal Dark</option>
+        </select>
+      </div>
+
+      <button class="nav-cta" onclick="openModal()">Book Appointment</button>
+    </div>
+
+    <div class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="home">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-badge">✦ Trusted by 12,000+ patients across the region</div>
+        <h1>
+          Where <em>Expert Care</em><br>Meets Compassion
+        </h1>
+        <p class="hero-sub">
+          Board-certified physicians delivering personalised, evidence-based treatment. Your health journey starts with a single conversation.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="openModal()">
+            Book an Appointment →
+          </button>
+          <button class="btn-secondary" onclick="document.getElementById('doctors').scrollIntoView({behavior:'smooth'})">
+            Meet Our Doctors
+          </button>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-num">18+</div>
+            <div class="hero-stat-label">Years of Excellence</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">12K+</div>
+            <div class="hero-stat-label">Patients Served</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">98%</div>
+            <div class="hero-stat-label">Satisfaction Rate</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">24/7</div>
+            <div class="hero-stat-label">Emergency Support</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Booking Card -->
+      <div class="booking-card">
+        <h3>Quick Appointment</h3>
+        <p>Book your consultation in under 2 minutes</p>
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" placeholder="Dr. / Mr. / Ms. Your Name" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone *</label>
+            <input type="tel" placeholder="+91 98765 00000" required>
+          </div>
+          <div class="form-group">
+            <label>Date *</label>
+            <input type="date" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Service Needed *</label>
+          <select required>
+            <option value="">Select a service...</option>
+            <option>General Consultation</option>
+            <option>Cardiology Check-up</option>
+            <option>Dermatology</option>
+            <option>Orthopaedics</option>
+            <option>Paediatrics</option>
+            <option>Preventive Health Screening</option>
+            <option>Diabetes Management</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Preferred Time</label>
+          <select>
+            <option>Morning (8:00 – 12:00)</option>
+            <option>Afternoon (12:00 – 16:00)</option>
+            <option>Evening (16:00 – 19:00)</option>
+          </select>
+        </div>
+        <button class="form-submit" onclick="handleHeroBooking()">Confirm Booking Request</button>
+        <p class="booking-secure">Your personal data is protected & HIPAA-compliant</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST ACCREDITATIONS BAR -->
+  <div class="trust-bar">
+    <div class="trust-bar-inner">
+      <div class="trust-item fade-in">
+        <div class="trust-icon">🏥</div>
+        <div class="trust-text">
+          <strong>NABH Accredited</strong>
+          <span>National quality standards</span>
+        </div>
+      </div>
+      <div class="trust-item fade-in fade-in-delay-1">
+        <div class="trust-icon">👨‍⚕️</div>
+        <div class="trust-text">
+          <strong>Board-Certified Physicians</strong>
+          <span>Every specialist is rigorously vetted</span>
+        </div>
+      </div>
+      <div class="trust-item fade-in fade-in-delay-2">
+        <div class="trust-icon">🔒</div>
+        <div class="trust-text">
+          <strong>Secure & Confidential</strong>
+          <span>HIPAA-compliant data practices</span>
+        </div>
+      </div>
+      <div class="trust-item fade-in fade-in-delay-3">
+        <div class="trust-icon">📋</div>
+        <div class="trust-text">
+          <strong>Insurance Accepted</strong>
+          <span>Major plans & cashless treatment</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT SECTION -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-visual fade-in">
+          <div class="about-metrics-row">
+            <div class="about-metric">
+              <div class="about-metric-num">18+</div>
+              <div class="about-metric-label">Years Established</div>
+            </div>
+            <div class="about-metric">
+              <div class="about-metric-num">42</div>
+              <div class="about-metric-label">Specialist Doctors</div>
+            </div>
+          </div>
+          <div class="about-metric">
+            <div class="about-metric-num">12,000+</div>
+            <div class="about-metric-label">Patients Cared For Annually</div>
+          </div>
+          <div class="about-metric">
+            <div style="font-size: 0.85rem; color: var(--teal); font-weight: 600; margin-bottom: 6px;">OUR MISSION</div>
+            <div style="font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--navy); font-style: italic; line-height: 1.5;">
+              "To deliver compassionate, evidence-based care that places the patient at the centre of every decision."
+            </div>
+          </div>
+        </div>
+        
+        <div class="about-content fade-in fade-in-delay-1">
+          <div class="section-label">About MediSphere</div>
+          <h2>A Legacy of Healthcare Excellence Since 2006</h2>
+          <p>
+            MediSphere Clinic was founded with a singular vision: to make world-class medical care accessible, warm, and deeply human. From a single consultation room to a multi-specialty centre, our journey has been driven by trust built one patient at a time.
+          </p>
+          <p>
+            Our team of board-certified specialists works collaboratively to ensure that every patient receives holistic, personalised care — from first diagnosis through to complete recovery.
+          </p>
+          <ul class="about-list">
+            <li>Internationally trained and nationally certified specialists</li>
+            <li>State-of-the-art diagnostic and imaging technology</li>
+            <li>Seamless electronic health records for continuity of care</li>
+            <li>Multilingual staff ensuring no patient is left without understanding</li>
+            <li>Dedicated patient advocates for every treatment journey</li>
+          </ul>
+          <button class="btn-primary" style="margin-top: 32px; background: var(--navy);" onclick="openModal()">
+            Schedule a Visit →
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLINIC SERVICES SECTION -->
+  <section class="services-section" id="services">
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label">Our Specialties</div>
+        <h2 class="section-title">Comprehensive Care Under One Roof</h2>
+        <p class="section-sub">From preventive screenings to specialist interventions, we cover every dimension of your health.</p>
+      </div>
+      <!-- Reconstructed dynamically by app.js -->
+      <div class="services-grid" id="services-grid"></div>
+    </div>
+  </section>
+
+  <!-- CLINIC DOCTORS SECTION -->
+  <section class="doctors-section" id="doctors">
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label">Our Specialists</div>
+        <h2 class="section-title">Meet the Experts Behind Your Care</h2>
+        <p class="section-sub">Each of our physicians brings decades of experience, international training, and a patient-first philosophy.</p>
+      </div>
+      <!-- Reconstructed dynamically by app.js -->
+      <div class="doctors-grid" id="doctors-grid"></div>
+    </div>
+  </section>
+
+  <!-- HEALTH BLOG ARTICLES SECTION -->
+  <section class="articles-section" id="articles">
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label">Health & Wellness Journal</div>
+        <h2 class="section-title">Latest Medical Articles & Insights</h2>
+        <p class="section-sub">Empowering you with clinically-vetted health advice and wellness strategies written by our board specialists.</p>
+      </div>
+      <!-- Reconstructed dynamically by app.js -->
+      <div class="articles-grid" id="articles-grid"></div>
+    </div>
+  </section>
+
+  <!-- PATIENT TESTIMONIALS SECTION -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label">Patient Stories</div>
+        <h2 class="section-title">Thousands of Lives, One Shared Experience</h2>
+        <p class="section-sub">Don't take our word for it — here's what our patients say about their MediSphere journey.</p>
+      </div>
+      <!-- Reconstructed dynamically by app.js -->
+      <div class="testimonials-grid" id="testimonials-grid"></div>
+    </div>
+  </section>
+
+  <!-- CLINIC FAQ ACCORDIONS -->
+  <section class="faq-section" id="faq">
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label">FAQ</div>
+        <h2 class="section-title">Your Questions, Answered</h2>
+        <p class="section-sub">Everything you need to know before your first visit — and beyond.</p>
+      </div>
+      
+      <div class="faq-container">
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            What insurance plans do you accept?
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">
+            <p>We accept all major insurance providers including Star Health, HDFC ERGO, Niva Bupa, Aditya Birla Health, and government schemes such as Ayushman Bharat. We also offer cashless treatment for empanelled insurers. Please call ahead to confirm your specific plan is accepted.</p>
+          </div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            How do I prepare for my first visit?
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">
+            <p>Please bring a valid government-issued photo ID, your insurance card (if applicable), a list of any current medications, and relevant previous medical records or test results. Arrive 10 minutes early to complete your registration. We'll take care of the rest.</p>
+          </div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            What are your clinic hours and do you have emergency services?
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">
+            <p>Our OPD is open Monday to Saturday, 8:00 AM – 7:00 PM, and Sunday 9:00 AM – 1:00 PM for urgent consultations. For emergencies, our on-call physician line operates 24/7. Please call our emergency number +91 11 4567 0000 or proceed to the nearest A&E department.</p>
+          </div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            Can I get a second opinion from one of your specialists?
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">
+            <p>Absolutely. We encourage patients to seek second opinions and actively welcome referrals. Simply book a specialist consultation and share any existing reports, scans, or treatment plans. Our doctors will provide an independent, thorough assessment.</p>
+          </div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            Is my medical information kept private?
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">
+            <p>Patient confidentiality is paramount at MediSphere. All medical records are stored on encrypted, HIPAA-compliant systems with strict access controls. Your information is never shared with third parties without your explicit written consent, except as required by law.</p>
+          </div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            Do you offer teleconsultation / online appointments?
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">
+            <p>Yes, we offer secure video consultations for follow-up visits, prescription renewals, and general medical advice. Teleconsultations are available during standard clinic hours and can be booked through our website or by calling reception.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK ACTION BLOCK -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="section-label" style="color: rgba(255,255,255,0.7);">Take the First Step</div>
+      <h2>Your Health Cannot Wait.<br><em style="font-style: italic;">Neither Should You.</em></h2>
+      <p>Join thousands of patients who trust MediSphere with their most precious asset — their health.</p>
+      <div class="cta-actions">
+        <button class="btn-white" onclick="openModal()">Book an Appointment</button>
+        <a href="tel:+911145670000"><button class="btn-outline-white">📞 Call +91 11 4567 0000</button></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>MediSphere Clinic</h3>
+        <p>Delivering compassionate, world-class healthcare since 2006. Accredited, trusted, and always here for you.</p>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <a href="#" style="width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.6); font-size: 0.8rem; transition: background 0.2s;" onmouseover="this.style.background='rgba(29,158,117,0.4)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">f</a>
+          <a href="#" style="width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.6); font-size: 0.8rem; transition: background 0.2s;" onmouseover="this.style.background='rgba(29,158,117,0.4)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">in</a>
+          <a href="#" style="width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.6); font-size: 0.85rem;" onmouseover="this.style.background='rgba(29,158,117,0.4)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">ig</a>
+        </div>
+      </div>
+      
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#doctors">Our Doctors</a></li>
+          <li><a href="#articles">Wellness Blog</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h4>Specialities</h4>
+        <ul>
+          <li><a href="#services">Cardiology</a></li>
+          <li><a href="#services">Orthopaedics</a></li>
+          <li><a href="#services">Neurology</a></li>
+          <li><a href="#services">Paediatrics</a></li>
+          <li><a href="#services">General Medicine</a></li>
+          <li><a href="#services">Diagnostics</a></li>
+        </ul>
+      </div>
+      
+      <!-- Contact details are auto updated by appState settings -->
+      <div class="footer-col" id="clinic-address">
+        <h4>Contact & Hours</h4>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>© 2025 MediSphere Clinic. All rights reserved. The content on this website is for informational purposes only and does not constitute medical advice.</p>
+      <div class="footer-badges">
+        <span class="footer-badge">NABH Accredited</span>
+        <span class="footer-badge">HIPAA Compliant</span>
+        <span class="footer-badge">Privacy Policy</span>
+        <span class="footer-badge">Terms of Service</span>
+      </div>
+    </div>
+
+    <!-- Hidden admin dashboard portal button -->
+    <div class="admin-portal-link">
+      <button class="admin-portal-btn" onclick="openAdminPortal()">🔐 Staff Portal (Admin CMS)</button>
+    </div>
+  </footer>
+
+  <!-- CLIENT BOOKING MODAL -->
+  <div class="modal-backdrop" id="bookingModal" onclick="handleBackdropClick(event)">
+    <div class="modal" id="modalContent">
+      <div id="bookingForm">
+        <div class="modal-header">
+          <div>
+            <h2>Book an Appointment</h2>
+            <p style="font-size: 0.875rem; color: var(--slate); margin-top: 6px;">Fill in the details below and our team will confirm within 2 hours.</p>
+          </div>
+          <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="m_name" placeholder="Your full name" required>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone *</label>
+            <input type="tel" id="m_phone" placeholder="+91 98765 00000" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="m_email" placeholder="your@email.com">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Preferred Date *</label>
+            <input type="date" id="m_date" required>
+          </div>
+          <div class="form-group">
+            <label>Preferred Time</label>
+            <select id="m_time">
+              <option>Morning (8:00 – 12:00)</option>
+              <option>Afternoon (12:00 – 16:00)</option>
+              <option>Evening (16:00 – 19:00)</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Specialty / Service *</label>
+            <select id="m_service" required>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Preferred Doctor</label>
+            <select id="m_doctor">
+              <!-- Dynamically filtered depending on specialty select -->
+              <option value="">No preference</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Briefly describe your concern</label>
+          <textarea rows="3" placeholder="E.g. recurring chest pain, knee pain after exercise..." style="resize: vertical;"></textarea>
+        </div>
+        
+        <button class="form-submit" onclick="submitBooking()">Confirm Appointment Request</button>
+        <p class="booking-secure">Your information is encrypted and HIPAA-compliant</p>
+      </div>
+
+      <!-- Success Layout -->
+      <div class="success-state" id="successState" style="display:none;">
+        <div class="success-icon">✓</div>
+        <h3>Appointment Request Received!</h3>
+        <p>Thank you! Our team will call you within 2 business hours to confirm your appointment at MediSphere Clinic.</p>
+        <button class="form-submit" style="margin-top: 24px;" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARTICLE MODAL READER -->
+  <div class="article-reader-backdrop" id="articleReaderModal" onclick="if(event.target===this) closeArticleReader();">
+    <div class="article-reader-modal">
+      <button class="article-reader-close" onclick="closeArticleReader();">✕</button>
+      <div class="article-reader-hero" id="reader-hero">
+        <div class="article-reader-title-box">
+          <span class="article-reader-category" id="reader-category">Cardiology</span>
+          <h1 id="reader-title">Title Here</h1>
+          <div class="article-reader-meta" id="reader-meta">Published May 18, 2026 | 5 min read</div>
+        </div>
+      </div>
+      <div class="article-reader-content" id="reader-body">
+        <!-- Content will be rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- SECURE STAFF LOGIN MODAL -->
+  <div class="admin-login-backdrop" id="adminLoginBackdrop" onclick="if(event.target===this) closeAdminLogin();">
+    <div class="admin-login-card">
+      <div class="admin-login-logo">
+        <svg viewBox="0 0 20 20"><path d="M10 2v16M2 10h16"/></svg>
+      </div>
+      <h2>Staff Portal Login</h2>
+      <p>Log in with your administrator credentials to manage appointments and CMS contents.</p>
+      
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="a_username" placeholder="Enter username (admin)">
+      </div>
+      <div class="form-group" style="margin-bottom: 24px;">
+        <label>Password</label>
+        <input type="password" id="a_password" placeholder="Enter password (admin123)">
+      </div>
+      
+      <div style="display: flex; gap: 12px;">
+        <button class="form-submit" style="margin-top:0;" onclick="authenticateAdmin()">Sign In</button>
+        <button class="btn-cms-cancel" onclick="closeAdminLogin()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPREHENSIVE ADMINISTRATIVE DASHBOARD & CMS OVERLAY -->
+  <div class="admin-overlay" id="adminOverlay">
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <div class="logo-mark" style="width:30px; height:30px;">
+          <svg viewBox="0 0 20 20" style="width:16px; height:16px;"><path d="M10 2v16M2 10h16"/></svg>
+        </div>
+        <span class="logo-text" style="color:white; font-size:1rem;">MediSphere <span style="font-size:0.75rem; display:block; opacity:0.8; font-weight:400; font-family:'DM Sans'; letter-spacing:0.05em;">Staff Console</span></span>
+      </div>
+      
+      <ul class="admin-sidebar-menu">
+        <li class="admin-menu-item active" data-tab="overview">📊 Overview</li>
+        <li class="admin-menu-item" data-tab="appointments">📅 Appointments</li>
+        <li class="admin-menu-item" data-tab="services">🩺 Services CMS</li>
+        <li class="admin-menu-item" data-tab="doctors">👨‍⚕️ Specialists CMS</li>
+        <li class="admin-menu-item" data-tab="reviews">⭐ Patient Reviews</li>
+        <li class="admin-menu-item" data-tab="articles">✍️ Health Blog CMS</li>
+        <li class="admin-menu-item" data-tab="settings">⚙️ System Settings</li>
+      </ul>
+
+      <div class="admin-sidebar-footer">
+        <button class="admin-logout" onclick="logoutAdmin()">🚪 Sign Out Portal</button>
+      </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="admin-main">
+      <div class="admin-topbar">
+        <h2 id="admin-view-title">Console Management Overview</h2>
+        <div class="admin-topbar-actions">
+          <span class="admin-portal-badge">Secure Session</span>
+        </div>
+      </div>
+
+      <div class="admin-content-area">
+        
+        <!-- Tab 1: Analytics Overview -->
+        <div class="admin-tab-content active" id="tab-overview">
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-icon">📅</div>
+              <div class="kpi-details">
+                <span>Total Bookings</span>
+                <h3 id="kpi-apts">0</h3>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon">💰</div>
+              <div class="kpi-details">
+                <span>Est. Revenue</span>
+                <h3 id="kpi-revenue">₹0</h3>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon">👨‍⚕️</div>
+              <div class="kpi-details">
+                <span>Active Doctors</span>
+                <h3 id="kpi-docs">0</h3>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon">⭐</div>
+              <div class="kpi-details">
+                <span>Pending Reviews</span>
+                <h3 id="kpi-reviews">0</h3>
+              </div>
+            </div>
+          </div>
+
+          <!-- svg custom data chart card -->
+          <div class="chart-container">
+            <div class="chart-header">
+              <h4>Consultation Appointments Trend (Last 7 Days)</h4>
+              <span style="font-size:0.78rem; color:var(--slate);">Live State Database</span>
+            </div>
+            <div id="dashboard-chart">
+              <!-- Generated Dynamically by adminEngine.generateSVGChart -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Appointments Management -->
+        <div class="admin-tab-content" id="tab-appointments">
+          <div class="cms-controls">
+            <div class="cms-filters">
+              <input type="text" id="apt-search" class="cms-input" placeholder="Search patients or doctors...">
+              <select id="apt-filter" class="cms-select">
+                <option value="all">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <button class="btn-cms-action" onclick="openModal()">➕ Add Custom Appointment</button>
+          </div>
+
+          <div class="table-container">
+            <table class="cms-table">
+              <thead>
+                <tr>
+                  <th>Patient Name</th>
+                  <th>Contact Info</th>
+                  <th>Preferred Date & Time</th>
+                  <th>Service Requested</th>
+                  <th>Doctor Assigned</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="apts-table-body">
+                <!-- Appended dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 3: Services CMS Manager -->
+        <div class="admin-tab-content" id="tab-services">
+          <div class="cms-controls">
+            <h4 style="color:var(--navy); font-weight:600;">Clinic Specialities Directory</h4>
+            <button class="btn-cms-action" onclick="adminEngine.openAddCmsPanel('service')">➕ Add Specialty Card</button>
+          </div>
+
+          <div class="table-container">
+            <table class="cms-table">
+              <thead>
+                <tr>
+                  <th style="text-align:center;">Icon</th>
+                  <th>Service Title</th>
+                  <th>Description Overview</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="services-table-body">
+                <!-- Appended dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 4: Specialists CMS Manager -->
+        <div class="admin-tab-content" id="tab-doctors">
+          <div class="cms-controls">
+            <h4 style="color:var(--navy); font-weight:600;">Active Clinical Physicians</h4>
+            <button class="btn-cms-action" onclick="adminEngine.openAddCmsPanel('doctor')">➕ Register Specialist</button>
+          </div>
+
+          <div class="table-container">
+            <table class="cms-table">
+              <thead>
+                <tr>
+                  <th>Avatar</th>
+                  <th>Doctor Name</th>
+                  <th>Specialty</th>
+                  <th>Clinical Experience</th>
+                  <th>Shift Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="doctors-table-body">
+                <!-- Appended dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 5: Reviews Manager -->
+        <div class="admin-tab-content" id="tab-reviews">
+          <div class="cms-controls">
+            <h4 style="color:var(--navy); font-weight:600;">Patient Testimonials Moderation Queue</h4>
+            <button class="btn-cms-action" onclick="adminEngine.openAddReviewPrompt()">➕ Write Patient Testimonial</button>
+          </div>
+
+          <div class="table-container">
+            <table class="cms-table">
+              <thead>
+                <tr>
+                  <th>Patient Name</th>
+                  <th>Tagline</th>
+                  <th>Rating</th>
+                  <th>Testimonial Statement</th>
+                  <th>Visibility</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="reviews-table-body">
+                <!-- Appended dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 6: Blog CMS Manager -->
+        <div class="admin-tab-content" id="tab-articles">
+          <div class="cms-controls">
+            <h4 style="color:var(--navy); font-weight:600;">Published Medical Journal Articles</h4>
+            <button class="btn-cms-action" onclick="adminEngine.openAddCmsPanel('article')">➕ Write Medical Article</button>
+          </div>
+
+          <div class="table-container">
+            <table class="cms-table">
+              <thead>
+                <tr>
+                  <th>Article Title</th>
+                  <th>Category</th>
+                  <th>Publish Date</th>
+                  <th>Read Duration</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="articles-table-body">
+                <!-- Appended dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 7: System Settings Editor -->
+        <div class="admin-tab-content" id="tab-settings">
+          <form onsubmit="adminEngine.saveSettings(event)">
+            <div class="settings-grid">
+              
+              <div class="settings-section-card">
+                <h4>General Clinic Configurations</h4>
+                <div class="form-group">
+                  <label>Clinic / Practice Name</label>
+                  <input type="text" id="set-name" required>
+                </div>
+                <div class="form-group">
+                  <label>Clinic Main Contact Number</label>
+                  <input type="text" id="set-phone" required>
+                </div>
+                <div class="form-group">
+                  <label>Emergency Support line (24/7)</label>
+                  <input type="text" id="set-ephone" required>
+                </div>
+                <div class="form-group">
+                  <label>Official Email Address</label>
+                  <input type="email" id="set-email" required>
+                </div>
+              </div>
+
+              <div class="settings-section-card">
+                <h4>Address & Working Shifts</h4>
+                <div class="form-group">
+                  <label>Clinic Physical Address</label>
+                  <textarea id="set-address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label>Standard OPD Operating Hours (Weekday)</label>
+                  <input type="text" id="set-hoursw" required>
+                </div>
+                <div class="form-group">
+                  <label>Sunday OPD Hours</label>
+                  <input type="text" id="set-hourss" required>
+                </div>
+                
+                <button type="submit" class="btn-cms-submit" style="margin-top:20px;">Save General Configuration</button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDEOUT CRUD SIDE PANEL -->
+  <div class="cms-panel-backdrop" id="cmsPanelBackdrop" onclick="if(event.target===this) adminEngine.closeCmsPanel();">
+    <div class="cms-panel">
+      <div class="cms-panel-header">
+        <h3 id="panel-title">Add/Edit Content</h3>
+        <button class="modal-close" onclick="adminEngine.closeCmsPanel()">✕</button>
+      </div>
+      
+      <form id="cmsForm">
+        <div id="panel-form-fields">
+          <!-- Dynamically generated fields by adminEngine.getFormFieldsMarkup -->
+        </div>
+
+        <div class="cms-panel-footer">
+          <button type="button" class="btn-cms-cancel" onclick="adminEngine.closeCmsPanel()">Cancel</button>
+          <button type="submit" class="btn-cms-submit">Save Content</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
