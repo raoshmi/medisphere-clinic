@@ -1289,3 +1289,138 @@ body.theme-dark .reschedule-subpanel.open {
   border: 1px solid rgba(255,255,255,0.05);
 }
 
+/* ========================================= */
+/* ACCESSIBILITY & LANG TOOLBAR STYLES      */
+/* ========================================= */
+.accessibility-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+}
+.acc-btn {
+  background: var(--teal-pale);
+  color: var(--teal);
+  border: 1px solid rgba(29,158,117,0.2);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'DM Sans', sans-serif;
+}
+.acc-btn:hover {
+  background: var(--teal);
+  color: white;
+}
+.lang-btn {
+  background: var(--navy);
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'DM Sans', sans-serif;
+}
+.lang-btn:hover {
+  background: var(--teal);
+}
+
+/* ========================================= */
+/* WCAG HIGH CONTRAST MODE STYLES           */
+/* ========================================= */
+body.high-contrast-mode {
+  --navy: #000000;
+  --navy-mid: #111111;
+  --teal: #FFFF00; /* Bright contrast yellow */
+  --teal-light: #FFFF00;
+  --teal-pale: #111111;
+  --cream: #000000;
+  --warm-white: #111111;
+  --slate: #FFFFFF;
+  --slate-light: #888888;
+  --text-dark: #FFFFFF;
+  --text-mid: #EEEEEE;
+  --gold: #FFFF00;
+  --shadow-soft: none;
+  --shadow-card: none;
+  background: #000000 !important;
+  color: #FFFFFF !important;
+}
+
+body.high-contrast-mode * {
+  border-color: #FFFFFF !important;
+}
+
+body.high-contrast-mode button, 
+body.high-contrast-mode a, 
+body.high-contrast-mode input, 
+body.high-contrast-mode select, 
+body.high-contrast-mode textarea {
+  outline: 3px solid #FFFF00 !important;
+  outline-offset: 2px;
+}
+
+body.high-contrast-mode .service-card,
+body.high-contrast-mode .doctor-card,
+body.high-contrast-mode .testimonial-card,
+body.high-contrast-mode .article-card,
+body.high-contrast-mode .kpi-card,
+body.high-contrast-mode .chart-card {
+  background: #000000 !important;
+  border: 2px solid #FFFFFF !important;
+}
+
+body.high-contrast-mode h1,
+body.high-contrast-mode h2,
+body.high-contrast-mode h3,
+body.high-contrast-mode h4,
+body.high-contrast-mode strong,
+body.high-contrast-mode b,
+body.high-contrast-mode span {
+  color: #FFFF00 !important;
+}
+
+/* ========================================= */
+/* CHARTJS GRID LAYOUT & CONTAINER SCALES   */
+/* ========================================= */
+.admin-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+  width: 100%;
+}
+@media (max-width: 1024px) {
+  .admin-charts-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .admin-charts-grid .chart-card {
+    grid-column: span 1 !important;
+  }
+}
+.chart-card {
+  background: var(--warm-white);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+  border: 1px solid var(--slate-light);
+}
+body.theme-dark .chart-card {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.chart-card canvas {
+  width: 100% !important;
+  height: 260px !important;
+}
+
+

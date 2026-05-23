@@ -9,6 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0B1F3A">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -23,12 +26,12 @@
     
     <div class="nav-links-container">
       <ul class="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#doctors">Our Doctors</a></li>
-        <li><a href="#articles">Health Articles</a></li>
-        <li><a href="#faq">FAQ</a></li>
-        <li><a href="#" onclick="openPatientPortal(); return false;" style="color: var(--teal); font-weight: 600;">🔑 My Appointments</a></li>
+        <li><a href="#about" data-i18n="nav_about" data-i18n-en="About">About</a></li>
+        <li><a href="#services" data-i18n="nav_services" data-i18n-en="Services">Services</a></li>
+        <li><a href="#doctors" data-i18n="nav_doctors" data-i18n-en="Our Doctors">Our Doctors</a></li>
+        <li><a href="#articles" data-i18n="nav_articles" data-i18n-en="Health Articles">Health Articles</a></li>
+        <li><a href="#faq" data-i18n="nav_faq" data-i18n-en="FAQ">FAQ</a></li>
+        <li><a href="#" onclick="openPatientPortal(); return false;" style="color: var(--teal); font-weight: 600;" data-i18n="nav_appointments" data-i18n-en="🔑 My Appointments">🔑 My Appointments</a></li>
       </ul>
       
       <!-- Theme Selection Dropdown Preset -->
@@ -42,7 +45,15 @@
         </select>
       </div>
 
-      <button class="nav-cta" onclick="openModal()">Book Appointment</button>
+      <!-- Accessibility Toolbar and Language Selector -->
+      <div class="accessibility-toolbar">
+        <button onclick="changeFontSize(0.1)" aria-label="Increase Font Size" class="acc-btn">A+</button>
+        <button onclick="changeFontSize(-0.1)" aria-label="Decrease Font Size" class="acc-btn">A-</button>
+        <button onclick="toggleHighContrast()" aria-label="Toggle Contrast Mode" class="acc-btn">🌓</button>
+        <button id="lang-toggle" onclick="toggleLanguage()" class="lang-btn">हिन्दी</button>
+      </div>
+
+      <button class="nav-cta" onclick="openModal()" data-i18n="nav_book" data-i18n-en="Book Appointment">Book Appointment</button>
     </div>
 
     <div class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
@@ -54,61 +65,61 @@
   <section class="hero" id="home">
     <div class="hero-grid">
       <div class="hero-content">
-        <div class="hero-badge">✦ Trusted by 12,000+ patients across the region</div>
-        <h1>
+        <div class="hero-badge" data-i18n="hero_badge" data-i18n-en="✦ Trusted by 12,000+ patients across the region">✦ Trusted by 12,000+ patients across the region</div>
+        <h1 data-i18n="hero_title" data-i18n-en="Where <em>Expert Care</em><br>Meets Compassion">
           Where <em>Expert Care</em><br>Meets Compassion
         </h1>
-        <p class="hero-sub">
+        <p class="hero-sub" data-i18n="hero_sub" data-i18n-en="Board-certified physicians delivering personalised, evidence-based treatment. Your health journey starts with a single conversation.">
           Board-certified physicians delivering personalised, evidence-based treatment. Your health journey starts with a single conversation.
         </p>
         <div class="hero-actions">
-          <button class="btn-primary" onclick="openModal()">
+          <button class="btn-primary" onclick="openModal()" data-i18n="hero_book_btn" data-i18n-en="Book an Appointment →">
             Book an Appointment →
           </button>
-          <button class="btn-secondary" onclick="document.getElementById('doctors').scrollIntoView({behavior:'smooth'})">
+          <button class="btn-secondary" onclick="document.getElementById('doctors').scrollIntoView({behavior:'smooth'})" data-i18n="hero_meet_docs" data-i18n-en="Meet Our Doctors">
             Meet Our Doctors
           </button>
         </div>
         <div class="hero-stats">
           <div>
             <div class="hero-stat-num">18+</div>
-            <div class="hero-stat-label">Years of Excellence</div>
+            <div class="hero-stat-label" data-i18n="hero_stat_1" data-i18n-en="Years of Excellence">Years of Excellence</div>
           </div>
           <div>
             <div class="hero-stat-num">12K+</div>
-            <div class="hero-stat-label">Patients Served</div>
+            <div class="hero-stat-label" data-i18n="hero_stat_2" data-i18n-en="Patients Served">Patients Served</div>
           </div>
           <div>
             <div class="hero-stat-num">98%</div>
-            <div class="hero-stat-label">Satisfaction Rate</div>
+            <div class="hero-stat-label" data-i18n="hero_stat_3" data-i18n-en="Satisfaction Rate">Satisfaction Rate</div>
           </div>
           <div>
             <div class="hero-stat-num">24/7</div>
-            <div class="hero-stat-label">Emergency Support</div>
+            <div class="hero-stat-label" data-i18n="hero_stat_4" data-i18n-en="Emergency Support">Emergency Support</div>
           </div>
         </div>
       </div>
 
       <!-- Hero Booking Card -->
       <div class="booking-card">
-        <h3>Quick Appointment</h3>
-        <p>Book your consultation in under 2 minutes</p>
+        <h3 data-i18n="quick_title" data-i18n-en="Quick Appointment">Quick Appointment</h3>
+        <p data-i18n="quick_sub" data-i18n-en="Book your consultation in under 2 minutes">Book your consultation in under 2 minutes</p>
         <div class="form-group">
-          <label>Full Name *</label>
+          <label data-i18n="label_name" data-i18n-en="Full Name *">Full Name *</label>
           <input type="text" placeholder="Dr. / Mr. / Ms. Your Name" required>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Phone *</label>
+            <label data-i18n="label_phone" data-i18n-en="Phone *">Phone *</label>
             <input type="tel" placeholder="+91 98765 00000" required>
           </div>
           <div class="form-group">
-            <label>Date *</label>
+            <label data-i18n="label_date" data-i18n-en="Date *">Date *</label>
             <input type="date" required>
           </div>
         </div>
         <div class="form-group">
-          <label>Service Needed *</label>
+          <label data-i18n="label_service" data-i18n-en="Service Needed *">Service Needed *</label>
           <select required>
             <option value="">Select a service...</option>
             <option>General Consultation</option>
@@ -121,15 +132,15 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Preferred Time</label>
+          <label data-i18n="label_time" data-i18n-en="Preferred Time">Preferred Time</label>
           <select>
             <option>Morning (8:00 – 12:00)</option>
             <option>Afternoon (12:00 – 16:00)</option>
             <option>Evening (16:00 – 19:00)</option>
           </select>
         </div>
-        <button class="form-submit" onclick="handleHeroBooking()">Confirm Booking Request</button>
-        <p class="booking-secure">Your personal data is protected & HIPAA-compliant</p>
+        <button class="form-submit" onclick="handleHeroBooking()" data-i18n="btn_confirm_req" data-i18n-en="Confirm Booking Request">Confirm Booking Request</button>
+        <p class="booking-secure" data-i18n="secure_data" data-i18n-en="Your personal data is protected & HIPAA-compliant">Your personal data is protected & HIPAA-compliant</p>
       </div>
     </div>
   </section>
@@ -600,14 +611,27 @@
             </div>
           </div>
 
-          <!-- svg custom data chart card -->
-          <div class="chart-container">
-            <div class="chart-header">
-              <h4>Consultation Appointments Trend (Last 7 Days)</h4>
-              <span style="font-size:0.78rem; color:var(--slate);">Live State Database</span>
+          <!-- Chart.js responsive dashboard charts grid -->
+          <div class="admin-charts-grid">
+            <div class="chart-card">
+              <h4 style="font-size: 1.15rem; margin-bottom: 12px; color: var(--navy);">Consultations by Day (Last 7 Days)</h4>
+              <div style="position: relative; height: 260px; width: 100%;">
+                <canvas id="chart-bookings-trend"></canvas>
+              </div>
             </div>
-            <div id="dashboard-chart">
-              <!-- Generated Dynamically by adminEngine.generateSVGChart -->
+            
+            <div class="chart-card">
+              <h4 style="font-size: 1.15rem; margin-bottom: 12px; color: var(--navy);">Specialist Distribution</h4>
+              <div style="position: relative; height: 260px; width: 100%;">
+                <canvas id="chart-specialties-pie"></canvas>
+              </div>
+            </div>
+            
+            <div class="chart-card" style="grid-column: span 2;">
+              <h4 style="font-size: 1.15rem; margin-bottom: 12px; color: var(--navy);">OPD Peak Hours Load Heatmap</h4>
+              <div style="position: relative; height: 260px; width: 100%;">
+                <canvas id="chart-peak-hours"></canvas>
+              </div>
             </div>
           </div>
         </div>

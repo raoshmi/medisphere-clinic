@@ -57,6 +57,8 @@ const adminEngine = {
     else if (tabName === 'settings') this.renderSettingsForm();
   },
 
+  chartInstances: {},
+
   // --- 1. OVERVIEW / ANALYTICS PANEL ---
   renderOverview() {
     // KPI Data Calculations
@@ -88,73 +90,179 @@ const adminEngine = {
     if (docsKpi) docsKpi.textContent = activeDocs;
     if (revsKpi) revsKpi.textContent = pendingReviews;
 
-    // Render dynamic analytics chart
-    this.generateSVGChart();
+    // Render dynamic analytics charts
+    this.renderChartJSCharts();
   },
 
-  generateSVGChart() {
-    const chartBox = document.getElementById('dashboard-chart');
-    if (!chartBox) return;
+  renderChartJSCharts() {
+    // 1. Chart bookings trend (Last 7 days)
+    const canvasTrend = document.getElementById('chart-bookings-trend');
+    const ctxTrend = canvasTrend ? canvasTrend.getContext('2d') : null;
+    
+    // 2. Specialty distribution
+    const canvasSpecialties = document.getElementById('chart-specialties-pie');
+    const ctxSpecialties = canvasSpecialties ? canvasSpecialties.getContext('2d') : null;
+    
+    // 3. OPD Peak hours horizontal bar
+    const canvasPeakHours = document.getElementById('chart-peak-hours');
+    const ctxPeakHours = canvasPeakHours ? canvasPeakHours.getContext('2d') : null;
 
-    // Calculate last 7 days metrics
-    const dataDays = [];
+    if (!ctxTrend || !ctxSpecialties || !ctxPeakHours) {
+      console.warn("Chart canvases not found in DOM");
+      return;
+    }
+
+    // Destroy existing instances to avoid canvas reuse warning
+    if (this.chartInstances.trend) this.chartInstances.trend.destroy();
+    if (this.chartInstances.specialties) this.chartInstances.specialties.destroy();
+    if (this.chartInstances.peakHours) this.chartInstances.peakHours.destroy();
+
+    // Data for last 7 days
+    const trendLabels = [];
+    const trendData = [];
     const today = new Date();
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
       d.setDate(today.getDate() - i);
       const dateStr = d.toISOString().split('T')[0];
       const count = window.appState.appointments.filter(a => a.date === dateStr).length;
-      
-      // format day label (e.g. "23 May")
       const dayLabel = d.toLocaleDateString('en-US', { day: '2-digit', month: 'short' });
-      dataDays.push({ label: dayLabel, count: count });
+      trendLabels.push(dayLabel);
+      trendData.push(count);
     }
 
-    const maxCount = Math.max(...dataDays.map(d => d.count), 4); // Min ceiling is 4
-
-    // Construct responsive custom SVG Bar Chart
-    let svgHtml = `
-      <svg class="chart-svg" viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg">
-        <!-- Grid lines & Y Axis Labels -->
-    `;
-
-    // 4 Horizontal grid lines
-    const gridSteps = 4;
-    for (let i = 0; i <= gridSteps; i++) {
-      const y = 30 + (i * 40);
-      const val = Math.round(maxCount - (i * (maxCount / gridSteps)));
-      svgHtml += `
-        <line class="chart-grid-line" x1="50" y1="${y}" x2="560" y2="${y}" />
-        <text class="chart-text axis-y" x="40" y="${y + 4}">${val}</text>
-      `;
-    }
-
-    // Render Bars & X Axis Labels
-    const barWidth = 44;
-    const spacing = 70;
-    const startX = 75;
-    const baselineY = 190;
-
-    dataDays.forEach((day, index) => {
-      const x = startX + (index * spacing);
-      const height = (day.count / maxCount) * 160; // Max height is 160px
-      const y = baselineY - height;
-
-      // Draw SVG rectangle for the bar
-      svgHtml += `
-        <rect class="chart-bar" x="${x}" y="${y}" width="${barWidth}" height="${height}" rx="6" />
-        <text class="chart-text" x="${x + (barWidth / 2)}" y="215">${day.label}</text>
-        <text class="chart-text" x="${x + (barWidth / 2)}" y="${y - 8}" style="font-weight: 600; fill: var(--navy); opacity: ${day.count > 0 ? 1 : 0};">${day.count}</text>
-      `;
+    // Specialty counts
+    const specialtiesMap = {};
+    window.appState.appointments.forEach(a => {
+      specialtiesMap[a.service] = (specialtiesMap[a.service] || 0) + 1;
+    });
+    // Ensure all registered specialties exist in counts
+    window.appState.services.forEach(s => {
+      if (!specialtiesMap[s.title]) specialtiesMap[s.title] = 0;
     });
 
-    // Baseline axis line
-    svgHtml += `
-      <line class="chart-axis-line" x1="50" y1="${baselineY}" x2="560" y2="${baselineY}" />
-      </svg>
-    `;
+    const specialtiesLabels = Object.keys(specialtiesMap);
+    const specialtiesData = Object.values(specialtiesMap);
 
-    chartBox.innerHTML = svgHtml;
+    // OPD Peak hours calculations: count appointments per slot
+    const slotsMap = {
+      'Morning (8:00 – 12:00)': 0,
+      'Afternoon (12:00 – 16:00)': 0,
+      'Evening (16:00 – 19:00)': 0
+    };
+    window.appState.appointments.forEach(a => {
+      for (const slotKey in slotsMap) {
+        if (a.time.includes(slotKey.split(' ')[0])) {
+          slotsMap[slotKey]++;
+          break;
+        }
+      }
+    });
+
+    const slotsLabels = Object.keys(slotsMap);
+    const slotsData = Object.values(slotsMap);
+
+    // Style helper (fetch colors from root stylesheet if possible, or fallbacks)
+    const isDark = document.body.classList.contains('theme-dark');
+    const labelColor = isDark ? '#CCCCCC' : '#475569';
+    const gridColor = isDark ? '#333333' : '#E2E8F0';
+
+    // Create Booking Trend Chart
+    this.chartInstances.trend = new Chart(ctxTrend, {
+      type: 'bar',
+      data: {
+        labels: trendLabels,
+        datasets: [{
+          label: 'Bookings',
+          data: trendData,
+          backgroundColor: 'rgba(29, 158, 117, 0.75)',
+          borderColor: '#1D9E75',
+          borderWidth: 2,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: labelColor }
+          },
+          y: {
+            grid: { color: gridColor },
+            ticks: { color: labelColor, stepSize: 1 }
+          }
+        }
+      }
+    });
+
+    // Create Specialties Doughnut Chart
+    this.chartInstances.specialties = new Chart(ctxSpecialties, {
+      type: 'doughnut',
+      data: {
+        labels: specialtiesLabels,
+        datasets: [{
+          data: specialtiesData,
+          backgroundColor: [
+            '#0B1F3A',
+            '#1D9E75',
+            '#D4A853',
+            '#8A2D74',
+            '#D46A53',
+            '#64748B'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: { color: labelColor, boxWidth: 12 }
+          }
+        }
+      }
+    });
+
+    // Create OPD Peak Hours Load Horizontal Bar Chart
+    this.chartInstances.peakHours = new Chart(ctxPeakHours, {
+      type: 'bar',
+      data: {
+        labels: slotsLabels,
+        datasets: [{
+          label: 'Consultation Load',
+          data: slotsData,
+          backgroundColor: 'rgba(212, 168, 83, 0.8)',
+          borderColor: '#D4A853',
+          borderWidth: 2,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        indexAxis: 'y', // Makes it horizontal
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: {
+            grid: { color: gridColor },
+            ticks: { color: labelColor, stepSize: 1 }
+          },
+          y: {
+            grid: { display: false },
+            ticks: { color: labelColor }
+          }
+        }
+      }
+    });
   },
 
   // --- 2. APPOINTMENTS MANAGEMENT CMS PANEL ---

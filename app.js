@@ -39,6 +39,175 @@ let state = {
   ]
 };
 
+// =========================================
+// MULTILINGUAL i18n SYSTEM & TRANSLATIONS
+// =========================================
+let currentLanguage = 'en';
+
+const translations = {
+  hi: {
+    "nav_about": "हमारे बारे में",
+    "nav_services": "सेवाएं",
+    "nav_doctors": "हमारे चिकित्सक",
+    "nav_articles": "स्वास्थ्य लेख",
+    "nav_faq": "पूछे जाने वाले प्रश्न",
+    "nav_appointments": "🔑 मेरे अपॉइंटमेंट",
+    "nav_book": "अपॉइंटमेंट बुक करें",
+    "acc_contrast": "🌓 उच्च कंट्रास्ट",
+    "acc_font_plus": "A+",
+    "acc_font_minus": "A-",
+    "hero_badge": "✦ क्षेत्र के 12,000+ रोगियों द्वारा विश्वसनीय",
+    "hero_title": "जहां <em>विशेषज्ञ देखभाल</em><br>सहानुभूति से मिलती है",
+    "hero_sub": "बोर्ड-प्रमाणित चिकित्सकों द्वारा व्यक्तिगत, साक्ष्य-आधारित उपचार। आपकी स्वास्थ्य यात्रा एक बातचीत से शुरू होती है।",
+    "hero_book_btn": "अपॉइंटमेंट बुक करें →",
+    "hero_meet_docs": "हमारे डॉक्टरों से मिलें",
+    "hero_stat_1": "उत्कृष्टता के वर्ष",
+    "hero_stat_2": "सेवा प्राप्त रोगी",
+    "hero_stat_3": "संतुष्टि दर",
+    "hero_stat_4": "आपातकालीन सहायता",
+    "quick_title": "त्वरित अपॉइंटमेंट",
+    "quick_sub": "2 मिनट से कम समय में परामर्श बुक करें",
+    "label_name": "पूरा नाम *",
+    "label_phone": "फ़ोन नंबर *",
+    "label_date": "तारीख *",
+    "label_service": "आवश्यक सेवा *",
+    "label_time": "पसंदीदा समय",
+    "btn_confirm_req": "बुकिंग अनुरोध की पुष्टि करें",
+    "secure_data": "आपका व्यक्तिगत डेटा सुरक्षित और HIPAA-अनुपालक है",
+    "trust_1_strong": "NABH मान्यता प्राप्त",
+    "trust_1_span": "राष्ट्रीय गुणवत्ता मानक",
+    "trust_2_strong": "बोर्ड-प्रमाणित चिकित्सक",
+    "trust_2_span": "हर विशेषज्ञ की जांच की जाती है",
+    "trust_3_strong": "सुरक्षित और गोपनीय",
+    "trust_3_span": "HIPAA-अनुपालक डेटा अभ्यास",
+    "trust_4_strong": "बीमा स्वीकृत",
+    "trust_4_span": "प्रमुख योजनाएं और कैशलेस उपचार",
+    "about_badge": "मेडिस्फीयर के बारे में",
+    "about_title": "2006 से स्वास्थ्य सेवा उत्कृष्टता की विरासत",
+    "about_p1": "मेडिस्फीयर क्लिनिक की स्थापना एक अनूठे दृष्टिकोण के साथ की गई थी: विश्व स्तरीय चिकित्सा देखभाल को सुलभ, गर्म और गहराई से मानवीय बनाना। एक सिंगल परामर्श कक्ष से एक बहु-विशेषज्ञता केंद्र तक, हमारी यात्रा एक समय में एक रोगी के विश्वास से प्रेरित रही है।",
+    "about_p2": "विशेषज्ञों की हमारी टीम सहयोगात्मक रूप से काम करती है ताकि यह सुनिश्चित किया जाए कि प्रत्येक रोगी को समग्र, व्यक्तिगत देखभाल मिले — पहले निदान से लेकर पूर्ण सुधार तक।",
+    "about_l1": "अंतरराष्ट्रीय स्तर पर प्रशिक्षित और राष्ट्रीय स्तर पर प्रमाणित विशेषज्ञ",
+    "about_l2": "अत्याधुनिक नैदानिक और इमेजिंग तकनीक",
+    "about_l3": "निरंतर देखभाल के लिए निर्बाध इलेक्ट्रॉनिक स्वास्थ्य रिकॉर्ड",
+    "about_l4": "बहुभाषी कर्मचारी यह सुनिश्चित करते हैं कि कोई भी रोगी बिना समझ के न रहे",
+    "about_l5": "प्रत्येक उपचार यात्रा के लिए समर्पित रोगी अधिवक्ता",
+    "about_btn": "मुलाकात निर्धारित करें →",
+    "services_badge": "हमारी विशेषताएं",
+    "services_title": "एक ही छत के नीचे व्यापक देखभाल",
+    "services_sub": "निवारक जांच से लेकर विशेषज्ञ हस्तक्षेप तक, हम आपके स्वास्थ्य के हर आयाम को कवर करते हैं।",
+    "serv-cardio_title": "कार्डियोलॉजी",
+    "serv-cardio_desc": "हृदय रोगों का विशेषज्ञ निदान और प्रबंधन — नियमित ईसीजी से लेकर उन्नत हृदय मूल्यांकन और जीवन शैली परामर्श तक।",
+    "serv-ortho_title": "अस्थिरोग विज्ञान",
+    "serv-ortho_desc": " joints, रीढ़ और हड्डियों की देखभाल फेलोशिप-प्रशिक्षित सर्जनों द्वारा। सर्जिकल और गैर-सर्जिकल दोनों उपचार मार्ग।",
+    "serv-neuro_title": "न्यूरोलॉजी",
+    "serv-neuro_desc": "माइग्रेन, मिर्गी, स्ट्रोक की रोकथाम और स्मृति विकारों सहित तंत्रिका संबंधी स्थितियों के लिए विशेष निदान और देखभाल।",
+    "serv-paed_title": "बाल चिकित्सा",
+    "serv-paed_desc": "नवजात शिशुओं से लेकर किशोरावस्था तक समर्पित बाल स्वास्थ्य सेवा। टीकाकरण कार्यक्रम, विकास निगरानी और पोषण मार्गदर्शन।",
+    "serv-genmed_title": "सामान्य चिकित्सा",
+    "serv-genmed_desc": "किसी भी स्वास्थ्य चिंता के लिए आपका पहला संपर्क बिंदु। संपूर्ण परामर्श, पुरानी बीमारी प्रबंधन और निवारक देखभाल योजना।",
+    "serv-diag_title": "डायग्नोस्टिक्स",
+    "serv-diag_desc": "रैपिड-रिज़ल्ट पैथोलॉजी, डिजिटल एक्स-रे, अल्ट्रासाउंड और एमआरआई रेफरल साझेदारी के साथ पूर्ण सेवा इन-हाउस प्रयोगशाला।",
+    "doctors_badge": "हमारे विशेषज्ञ",
+    "doctors_title": "आपकी देखभाल के पीछे के विशेषज्ञों से मिलें",
+    "doctors_sub": "हमारे प्रत्येक चिकित्सक के पास दशकों का अनुभव, अंतर्राष्ट्रीय प्रशिक्षण और रोगी-प्रथम दर्शन है।",
+    "doc-ritu_desc": "एम्स नई दिल्ली और जॉन्स हॉपकिन्स में प्रशिक्षित। इंटरवेंशनल कार्डियोलॉजी, निवारक देखभाल और हार्ट फेल्योर प्रबंधन के विशेषज्ञ।",
+    "doc-arjun_desc": "न्यूनतम आक्रामक संयुक्त प्रतिस्थापन, खेल चोटों और रीढ़ की हड्डी की सर्जरी में विशेषज्ञता। सेंट थॉमस अस्पताल, लंदन में प्रशिक्षित।",
+    "doc-priya_desc": "बाल विकास, टीकाकरण कार्यक्रमों और बाल पोषण में एक गर्म और भरोसेमंद विशेषज्ञ। सभी उम्र के रोगियों द्वारा प्रिय।",
+    "rev-1_quote": "डॉ. शर्मा ने एक ऐसी हृदय समस्या की पहचान की जिसे दो अन्य क्लीनिक पूरी तरह से चूक गए थे। देखभाल, अनुवर्ती कार्रवाई, पूरी टीम — बिल्कुल असाधारण। मुझे यहाँ एक दूसरे परिवार जैसा महसूस होता है।",
+    "rev-2_quote": "अपने 4 साल के बच्चे को डॉक्टर के पास लाना एक दुःस्वप्न हुआ करता था। डॉ. प्रिया के पास बच्चों के साथ ऐसा उपहार है — मेरी बेटी वास्तव में मिलने के लिए कहती है! हमारे लिए पूरा अनुभव बदल गया है।",
+    "rev-3_quote": "डॉ. कपूर ने मेरे घुटने के प्रतिस्थापन की सर्जरी की और मैं अपनी अपेक्षा से आधे समय में वापस चलने लगा। फिजियोथेरेपी अनुवर्ती निर्बाध थी। वास्तव में विश्व स्तरीय देखभाल।",
+    "art-1_title": "उच्च रक्तचाप को समझना: मूक खतरा",
+    "art-1_desc": "उच्च रक्तचाप में अक्सर कोई लक्षण नहीं दिखाई देते हैं, फिर भी यह प्रमुख हृदय जोखिम पैदा करता है। सक्रिय स्क्रीनिंग, आहार समायोजन और आदतों के बारे में जानें।",
+    "art-2_title": "सक्रिय विकास के लिए बच्चों के लिए 5 आवश्यक पोषक तत्व",
+    "art-2_desc": "यह सुनिश्चित करना कि आपके बच्चे को प्रमुख विटामिन और खनिज मिलें, शारीरिक और मानसिक विकास के लिए बुनियादी है। उन मुख्य पोषक तत्वों के बारे में पढ़ें जिन्हें हर माता-पिता को ट्रैक करना चाहिए।",
+    "art-3_title": "जोड़ों की चोटों से सुरक्षित रूप से उबरना",
+    "art-3_desc": "जोड़ों के खिंचाव और खेल की चोटों के लिए संरचित, रोगी की वसूली की आवश्यकता होती है। आर.आई.सी.ई प्रोटोकॉल का अन्वेषण करें और कैसे चिकित्सा मार्गदर्शन पुरानी पुनरावृत्ति को रोकता है।",
+    "faq_badge": "पूछे जाने वाले प्रश्न",
+    "faq_title": "आपके प्रश्न, उत्तर दिए गए",
+    "faq_sub": "अपनी पहली यात्रा से पहले और बाद में जानने के लिए सब कुछ।",
+    "cta_badge": "पहला कदम उठाएं",
+    "cta_title": "आपका स्वास्थ्य इंतजार नहीं कर सकता।<br><em style='font-style: italic;'>आपको भी नहीं करना चाहिए।</em>",
+    "cta_sub": "उन हजारों रोगियों में शामिल हों जो अपनी सबसे मूल्यवान संपत्ति — अपने स्वास्थ्य के साथ मेडिस्फीयर पर भरोसा करते हैं।",
+    "cta_book": "अपॉइंटमेंट बुक करें",
+    "cta_call": "📞 कॉल करें +91 11 4567 0000",
+    "footer_desc": "2006 से दयालु, विश्व स्तरीय स्वास्थ्य सेवा प्रदान करना। मान्यता प्राप्त, विश्वसनीय, और हमेशा आपके लिए यहाँ।",
+    "footer_col_1": "त्वरित लिंक्स",
+    "footer_col_2": "विशेषताएं",
+    "footer_col_3": "संपर्क और घंटे",
+    "footer_copyright": "© 2025 मेडिस्फीयर क्लिनिक। सभी अधिकार सुरक्षित। इस वेबसाइट की सामग्री केवल सूचनात्मक उद्देश्यों के लिए है और चिकित्सा सलाह का गठन नहीं करती है।",
+    "portal_title": "पेशेंट हब पोर्टल",
+    "portal_sub": "अपने अपॉइंटमेंट प्रबंधित करें, पुनर्निर्धारण का अनुरोध करें, या बुकिंग रद्द करें।",
+    "portal_login_msg": "अपनी पहचान सत्यापित करने के लिए कृपया अपने मेडिकल बुकिंग से जुड़े पूरे नाम और फोन नंबर दर्ज करें।",
+    "portal_label_name": "रोगी का पूरा नाम *",
+    "portal_label_phone": "पंजीकृत फ़ोन नंबर *",
+    "portal_btn_login": "सत्यापित करें और पोर्टल में प्रवेश करें",
+    "portal_btn_cancel": "रद्द करें",
+    "portal_welcome": "नमस्ते, रोगी",
+    "portal_signout": "साइन आउट",
+    "portal_sec_title": "आपके निर्धारित परामर्श",
+    "portal_no_apts": "आपकी फ़ाइल से जुड़ा कोई अपॉइंटमेंट नहीं है।",
+    "admin_welcome": "स्टाफ पोर्टल लॉगिन",
+    "admin_sub": "अपॉइंटमेंट और CMS सामग्री प्रबंधित करने के लिए अपने व्यवस्थापक क्रेडेंशियल के साथ लॉग इन करें।"
+  }
+};
+
+function switchLanguage(lang) {
+  currentLanguage = lang;
+  localStorage.setItem('medisphere_language', lang);
+
+  // Apply static text replacements using data-i18n attributes
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[lang] && translations[lang][key]) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = translations[lang][key];
+      } else {
+        el.innerHTML = translations[lang][key];
+      }
+    } else {
+      const defaultVal = el.getAttribute('data-i18n-en') || el.innerHTML;
+      el.innerHTML = defaultVal;
+    }
+  });
+
+  // Re-render dynamic sections with new locale
+  renderServices();
+  renderDoctors();
+  renderReviews();
+  renderArticles();
+  updateClinicInfo();
+
+  // Active select option update
+  const langToggleBtn = document.getElementById('lang-toggle');
+  if (langToggleBtn) {
+    langToggleBtn.textContent = lang === 'en' ? 'हिन्दी' : 'English';
+  }
+}
+
+function toggleLanguage() {
+  const nextLang = currentLanguage === 'en' ? 'hi' : 'en';
+  switchLanguage(nextLang);
+  showToastNotification(nextLang === 'hi' ? '🌐 भाषा बदली गई: हिन्दी' : '🌐 Language Switched: English');
+}
+
+// =========================================
+// WCAG ACCESSIBILITY TOOLBAR UTILITIES
+// =========================================
+let fontScale = 1.0;
+
+function toggleHighContrast() {
+  const active = document.body.classList.toggle('high-contrast-mode');
+  localStorage.setItem('medisphere_high_contrast', active ? 'true' : 'false');
+  showToastNotification(active ? "🌓 High Contrast Mode Activated" : "🌓 High Contrast Mode Deactivated");
+}
+
+function changeFontSize(step) {
+  fontScale = Math.min(1.4, Math.max(0.8, fontScale + step));
+  document.documentElement.style.fontSize = `${fontScale * 16}px`;
+  localStorage.setItem('medisphere_font_scale', fontScale);
+  showToastNotification(`🔍 Font Size Adjusted: ${Math.round(fontScale * 100)}%`);
+}
+
 // --- DATA PERSISTENCE METHODS (WITH XOR-BASE64 OBFUSCATION) ---
 const OBFUSCATION_KEY = 'medisphere_secure_key_2026';
 
@@ -100,7 +269,6 @@ function updateDoctorSelectOptions(serviceSelectorId, doctorSelectorId) {
     });
   } else {
     // Filter doctors by selected service specialty
-    // A service option value might contain "Cardiology Check-up" or similar, check for partial matches
     const serviceNameClean = selectedService.toLowerCase();
     
     state.doctors.forEach(doc => {
@@ -135,7 +303,7 @@ function updateDoctorSelectOptions(serviceSelectorId, doctorSelectorId) {
   }
 }
 
-// --- RENDER DYNAMIC COMPONENT SECTIONS ---
+// --- RENDER DYNAMIC COMPONENT SECTIONS (WITH TRANSLATION LOOKUPS) ---
 function renderServices() {
   const grid = document.getElementById('services-grid');
   if (!grid) return;
@@ -145,11 +313,16 @@ function renderServices() {
     const card = document.createElement('div');
     card.className = `service-card fade-in fade-in-delay-${idx % 3}`;
     card.onclick = () => openBookingModalFromService(s.title);
+    
+    const title = currentLanguage === 'hi' ? (translations.hi[s.id + '_title'] || s.title) : s.title;
+    const desc = currentLanguage === 'hi' ? (translations.hi[s.id + '_desc'] || s.desc) : s.desc;
+    const btnText = currentLanguage === 'hi' ? "अभी बुक करें →" : "Book Now →";
+
     card.innerHTML = `
       <div class="service-icon">${s.icon}</div>
-      <h3>${s.title}</h3>
-      <p>${s.desc}</p>
-      <span class="service-link">Book Now →</span>
+      <h3>${title}</h3>
+      <p>${desc}</p>
+      <span class="service-link">${btnText}</span>
     `;
     grid.appendChild(card);
   });
@@ -167,31 +340,40 @@ function renderDoctors() {
     
     // Status text mapping
     let statusClass = 'available';
-    let statusLabel = 'Available';
+    let statusLabel = currentLanguage === 'hi' ? 'उपलब्ध' : 'Available';
     if (doc.status === 'leave') {
       statusClass = 'leave';
-      statusLabel = 'On Leave';
+      statusLabel = currentLanguage === 'hi' ? 'छुट्टी पर' : 'On Leave';
     } else if (doc.status === 'on-call') {
       statusClass = 'on-call';
-      statusLabel = 'On-Call';
+      statusLabel = currentLanguage === 'hi' ? 'ऑन-कॉल' : 'On-Call';
     }
+
+    const specialty = currentLanguage === 'hi' ? (translations.hi[doc.id + '_specialty'] || doc.specialty) : doc.specialty;
+    const desc = currentLanguage === 'hi' ? (translations.hi[doc.id + '_desc'] || doc.desc) : doc.desc;
+    
+    // Localized labels
+    const docSpecLabel = currentLanguage === 'hi' ? `${specialty} विशेषज्ञ · ${doc.exp} वर्षों का अनुभव` : `${doc.specialty} Specialist · ${doc.exp} Years Experience`;
+    const docStatsPat = currentLanguage === 'hi' ? 'मरीज' : 'Patients';
+    const docStatsRat = currentLanguage === 'hi' ? 'रेटिंग' : 'Rating';
+    const docStatsSch = currentLanguage === 'hi' ? 'अनुसूची' : 'Schedule';
 
     card.innerHTML = `
       <div class="doctor-img">
         <div class="doctor-avatar">${initials}</div>
-        <span class="doctor-specialty-badge">${doc.specialty}</span>
+        <span class="doctor-specialty-badge">${specialty}</span>
         <div class="doctor-availability ${statusClass}">
           <span class="dot-indicator"></span>${statusLabel}
         </div>
       </div>
       <div class="doctor-info">
         <h3>${doc.name}, ${doc.qual}</h3>
-        <div class="doctor-qual">${doc.specialty} Specialist · ${doc.exp} Years Experience</div>
-        <p>${doc.desc}</p>
+        <div class="doctor-qual">${docSpecLabel}</div>
+        <p>${desc}</p>
         <div class="doctor-stats">
-          <div class="doctor-stat"><strong>${doc.patients.toLocaleString()}+</strong>Patients</div>
-          <div class="doctor-stat"><strong>${doc.rating.toFixed(1)}/5</strong>Rating</div>
-          <div class="doctor-stat"><strong>${doc.days}</strong>Schedule</div>
+          <div class="doctor-stat"><strong>${doc.patients.toLocaleString()}+</strong>${docStatsPat}</div>
+          <div class="doctor-stat"><strong>${doc.rating.toFixed(1)}/5</strong>${docStatsRat}</div>
+          <div class="doctor-stat"><strong>${doc.days}</strong>${docStatsSch}</div>
         </div>
       </div>
     `;
@@ -214,14 +396,17 @@ function renderReviews() {
     
     const starString = '★'.repeat(rev.rating) + '☆'.repeat(5 - rev.rating);
     
+    const quote = currentLanguage === 'hi' ? (translations.hi[rev.id + '_quote'] || rev.quote) : rev.quote;
+    const meta = currentLanguage === 'hi' ? (translations.hi[rev.id + '_meta'] || rev.meta) : rev.meta;
+
     card.innerHTML = `
       <div class="stars">${starString}</div>
-      <blockquote>"${rev.quote}"</blockquote>
+      <blockquote>"${quote}"</blockquote>
       <div class="testimonial-author">
         <div class="author-avatar">${initials}</div>
         <div>
           <div class="author-name">${rev.name}</div>
-          <div class="author-meta">${rev.meta}</div>
+          <div class="author-meta">${meta}</div>
         </div>
       </div>
     `;
@@ -249,6 +434,10 @@ function renderArticles() {
       bgUrl = 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=600&q=80';
     }
     
+    const title = currentLanguage === 'hi' ? (translations.hi[art.id + '_title'] || art.title) : art.title;
+    const desc = currentLanguage === 'hi' ? (translations.hi[art.id + '_desc'] || art.desc) : art.desc;
+    const readMoreLabel = currentLanguage === 'hi' ? "पूरा लेख पढ़ें →" : "Read full article →";
+    
     card.innerHTML = `
       <div class="article-cover" style="background-image: url('${bgUrl}');">
         <span class="article-category">${art.category}</span>
@@ -258,9 +447,9 @@ function renderArticles() {
           <span>📅 ${art.date}</span>
           <span>⏱️ ${art.readTime}</span>
         </div>
-        <h3>${art.title}</h3>
-        <p>${art.desc}</p>
-        <span class="article-readmore">Read full article →</span>
+        <h3>${title}</h3>
+        <p>${desc}</p>
+        <span class="article-readmore">${readMoreLabel}</span>
       </div>
     `;
     grid.appendChild(card);
@@ -816,11 +1005,33 @@ document.addEventListener('DOMContentLoaded', () => {
   loadState();
   renderTheme(state.theme);
 
+  // Restore accessibility and language settings
+  const savedLang = localStorage.getItem('medisphere_language') || 'en';
+  switchLanguage(savedLang);
+
+  const highContrast = localStorage.getItem('medisphere_high_contrast') === 'true';
+  if (highContrast) {
+    document.body.classList.add('high-contrast-mode');
+  }
+
+  const savedScale = localStorage.getItem('medisphere_font_scale');
+  if (savedScale) {
+    fontScale = parseFloat(savedScale);
+    document.documentElement.style.fontSize = `${fontScale * 16}px`;
+  }
+
   renderServices();
   renderDoctors();
   renderReviews();
   renderArticles();
   updateClinicInfo();
+
+  // Register service worker for PWA
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('Service Worker registered successfully with scope:', reg.scope))
+      .catch(err => console.error('Service Worker registration failed:', err));
+  }
 
   window.addEventListener('scroll', () => {
     const nav = document.getElementById('navbar');
@@ -890,3 +1101,9 @@ window.showReschedulePanel = showReschedulePanel;
 window.hideReschedulePanel = hideReschedulePanel;
 window.confirmRescheduleFromPortal = confirmRescheduleFromPortal;
 window.showToastNotification = showToastNotification;
+
+// Language & Accessibility Exports
+window.switchLanguage = switchLanguage;
+window.toggleLanguage = toggleLanguage;
+window.toggleHighContrast = toggleHighContrast;
+window.changeFontSize = changeFontSize;
